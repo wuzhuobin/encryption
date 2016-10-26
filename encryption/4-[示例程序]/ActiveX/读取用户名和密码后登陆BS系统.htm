@@ -1,0 +1,180 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>ViKey--读取用户名和密码后登陆BS系统</title>
+<link href="ViKeyTest.css" rel="stylesheet" type="text/css">
+<embed id="ViKeyInterface"  type="application/npViKeyInterface-plugin" style="height: 0;width: 0; "> </embed>
+<script language="JavaScript">
+<!-- 
+var ViKeyInterface;
+var BS_UserName;
+var BS_PassWord;
+
+function LoadViKeyInterface() 
+{
+	var ViKeyCount;
+	try
+	{
+		 //创建ViKey加密狗控件
+		if (document.implementation && document.implementation.createDocument && typeof XSLTProcessor != 'undefined') 
+		{ 
+			// chrome, firefox etc
+			//alert("Google");
+			ViKeyInterface= document.getElementById('ViKeyInterface');
+		}
+		else
+		{
+			//alert("IE");
+			ViKeyInterface=new ActiveXObject("ViKeyActiveX.ViKeyInterface.1");
+		}
+
+		var ViKeyCount;
+		ViKeyCount = ViKeyInterface.IVikeyFind();
+	 }
+			
+	 catch(e)  
+	 {  
+		alert("没有安装ViKey加密狗网页控件, 请安装ViKey加密狗网页控件");
+		return false;
+	 }  
+
+	return true;
+}
+
+window.onload = function() 
+{
+	LoadViKeyInterface();
+
+
+	ViKeyFind();		//查找加密狗
+	ViKeyUserLogon();	//以用户权限登录
+	GetUserName();		//从加密获取用户名
+	GetPassWord();		//从加密获取密码
+}
+
+
+function ViKeyFind()    //查找加密锁
+{   
+	var FM = window.document.ViKeyForm;
+	var ViKeyCount;
+
+	ViKeyCount = ViKeyInterface.IVikeyFind();
+	if(ViKeyInterface.IViKeyGetError() !=0)	
+	{
+		alert("系统中没有找到加密狗");
+	}
+}
+
+
+function ViKeyUserLogon()   //以用户权限登录
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex;
+	ViKeyIndex = 0;
+
+	ViKeyInterface.IVikeyUserLogin(ViKeyIndex, "11111111");
+	
+	if(ViKeyInterface.IViKeyGetError() !=0)	
+	{
+		alert("加密狗本身的密码错误，登陆失败");
+	}
+}
+
+
+
+function GetUserName()   //从加密获取用户名
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex;
+	var Addr= 0;
+	var Length = 32;
+
+	ViKeyIndex = 0;
+
+	BS_UserName	= ViKeyInterface.IVikeyReadData(ViKeyIndex, Addr, Length);
+
+	if(ViKeyInterface.IViKeyGetError() !=0)	
+	{
+		alert("获取认证-用户名失败");
+	}
+	else
+	{
+		FM.BS_UserName.value = BS_UserName;
+	}
+}
+
+function GetPassWord()   //从加密获取密码
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex;
+	var Addr= 32;
+	var Length = 32;
+
+	ViKeyIndex = 0;
+
+	BS_PassWord	= ViKeyInterface.IVikeyReadData(ViKeyIndex, Addr, Length);
+
+	if(ViKeyInterface.IViKeyGetError() !=0 )	
+	{
+		alert("获取认证-密码失败");
+	}
+	else
+	{
+		FM.BS_PassWord.value = BS_PassWord;
+	}
+}
+
+
+function BS_Submit()   //去登陆BS系统
+{	
+	
+	var FM = window.document.ViKeyForm;
+	alert("认证-用户名："+ BS_UserName+ "\n   认证-密码："+BS_PassWord+"\n\n接下来调用登陆业务机制");
+}
+
+</script>
+</head>
+<body>
+<div align="center">
+              <span class="blue01">ViKey--读取用户名和密码后登陆BS系统</span>
+</div>
+
+<form action="" name="ViKeyForm" id="ViKeyForm">
+<table width="400" border="0" align="center" bgcolor="#dfe7df">
+	<tr height="26" />
+	<tr>
+        <td height="26">
+			<p>认证-用户名：</p>
+		</td>
+        <td height="26">
+            <input name="BS_UserName" type="text" class="cttextboxt" id="edtntupin" size="18" >
+		</td>
+	</tr>
+	<tr>
+		<td height="26">
+			<p>认证-密码：</p>           
+		</td>
+		<td height="26">
+			<input name="BS_PassWord" type="text" class="cttextboxt" id="edtntupin" size="18" >
+		</td>
+     </tr>
+	<tr height="26" />
+	<tr>
+		<td height="26" />
+		<td height="26">
+             <input align="center" type="submit" name="Submit" value="进入BS系统" onClick="BS_Submit();">
+		</td>
+     </tr>
+</table>
+</form>
+            <table width="510" border="0" align="center" cellspacing="0">
+              <tr>
+                <td width="139"><div align="center"><span class="ctbody3"><span class="blue01 style1"><a href="ViKey网页控件.exe">点击安装ViKey加密狗网页控件</a></span></span></div></td>
+               
+              </tr>
+            </table>
+            <p align="center" class="ctbody3">Create by ViKeyMaster, 2013-5-17</p>
+<div align="center" class="ctbody3"></div>
+
+</body>
+</html>

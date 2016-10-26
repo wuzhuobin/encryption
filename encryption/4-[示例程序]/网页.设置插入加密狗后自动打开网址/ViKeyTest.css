@@ -1,0 +1,70 @@
+.cttitle {
+	font-size: 12px;
+	color: #043b9c;
+}
+.ctbottom {
+	font-size: 9pt;
+	color: #000000;
+}
+.ctbody {
+	font-size: 9pt;
+	line-height: 150%;
+	color: #000000;
+}
+.left {
+	font-size: 9pt;
+	color: #043b9c;
+	line-height: 150%;
+}
+A:hover {
+	COLOR: #000000; TEXT-DECORATION: underline
+}
+A:active {
+	COLOR: #000000; TEXT-DECORATION: none
+}
+A:link {
+	COLOR: #043b9c; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #043b9c; TEXT-DECORATION: none
+}
+.ctbody2 {
+	font-size: 9pt;
+	color: #000000;
+}
+.ctbd_lb02 {
+	font-size: 9pt;
+	font-weight: bold;
+	color: #CC6600;
+}
+.ctbody3 {
+	font-size: 9pt;
+	line-height: 120%;
+	color: #000000;
+}
+.ctbd_lb01 {
+	font-size: 9pt;
+	color: #CC3300;
+}
+.cttextboxt {
+	font-family: "Courier New";
+	font-size: 9pt;
+	background-color: #E6E4DA;
+	color: #043b9c
+}
+.blue01 {
+	font-size: 9pt;
+	color: #0033FF;
+}
+.blue02 {
+	font-size: 9pt;
+	color: #0000FF;
+	font-weight: bold;
+}
+.inputtext { color: #043b9c;
+             border: 1px #A7A7A7 solid; 
+			 /*margin-top: 0px; 
+			 margin-bottom: 0px; 
+			 margin-left: 0px; */
+			 font-family: "Courier New";
+			 height: 20px}

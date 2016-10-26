@@ -1,0 +1,301 @@
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    List: TListBox;
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm1.Button1Click(Sender: TObject);
+ var
+  i,num:Integer;
+  str:string;
+  tmpBuf:array[0..30] of Byte;
+  cStr:array[0..100] of Char;
+  mBuf:array[0..128] of Byte;
+  mP1,mP2,mP3,mP4:Word;
+
+  ////////////       
+  UserPinBuf:array[0..10]of Char;
+  AdminPinBuf:array[0..10] of Char;   
+  SoftIDStringBuf:array[0..10] of Char;
+  Addr : WORD;
+  Length: WORD;
+  wIndex : WORD;
+  dwCount   : DWORD;
+  dwHID   : DWORD;   
+  retcode   : DWORD;
+  ModuleIndex: WORD;
+  Value :WORD       ;
+  Mode : WORD        ;
+  IsZero:WORD;
+  CanDecrase:WORD;
+  Handle:THandle;
+
+
+VikeyFind:function(pdwCount:pLongWord):DWORD; stdcall;
+VikeyGetHID:function(Index:Word;dwHID:pLongWord):DWORD; stdcall;
+VikeyUserLogin:function(Index:Word;pUserPW:pByteArray):DWORD; stdcall;
+VikeyAdminLogin:function(Index:Word;pAdminPW:pByteArray):DWORD; stdcall;
+VikeyLogoff:function(Index:Word):DWORD; stdcall;
+VikeySetUserPassWordAttempt:function(Index:Word;wAttempt:Byte):DWORD; stdcall;
+VikeySetAdminPassWordAttempt:function(Index:Word;wAttempt:Byte):DWORD; stdcall;
+VikeyGetUserPassWordAttempt:function(Index:Word;wAttempt:pByteArray):DWORD; stdcall;
+VikeyGetAdminPassWordAttempt:function(Index:Word;wAttempt:pByteArray):DWORD; stdcall;
+VikeyResetPassword:function(Index:Word;pNewUserPassWord:pByteArray;pNewAdminPassWord:pByteArray):DWORD; stdcall;
+VikeySetSoftIDString:function(Index:Word;pSoftIDString:pByteArray):DWORD; stdcall;
+VikeyGetSoftIDString:function(Index:Word;pSoftIDString:pByteArray):DWORD; stdcall;
+ViKeySetUpdateTag:function(Index:Word;dwSoftID:LongWord):DWORD; stdcall;
+ViKeyGetUpdateTag:function(Index:Word;lpSoftID:pLongWord):DWORD; stdcall;
+ViKeySetVersionFlag:function(Index:Word;dwSoftID:LongWord):DWORD; stdcall;
+ViKeyGetVersionFlag:function(Index:Word;lpSoftID:pLongWord):DWORD; stdcall;
+VikeyReadData:function(Index:Word;StartAddress:Word;BufferLength:Word;pBuffer:pByteArray):DWORD; stdcall;
+VikeyWriteData:function(Index:Word;StartAddress:Word;BufferLength:Word;pBuffer:pByteArray):DWORD; stdcall;
+ViKeyRandom:function(Index:Word;pReturn1:pWord;pReturn2:pWord;pReturn3:pWord;pReturn4:pWord):DWORD; stdcall;
+VikeySeed:function(Index:Word;Seed:LongWord;pReturn1:pWord;pReturn2:pWord;pReturn3:pWord;pReturn4:pWord):DWORD; stdcall;
+ViKeyDecraseModule:function(Index:Word;ModuleIndex:Word):DWORD; stdcall;
+ViKeyGetModule:function(Index:Word;ModuleIndex:Word;pValue:pWord):DWORD; stdcall;
+ViKeySetModule:function(Index:Word;ModuleIndex:Word;Value:Word;Mode:Word):DWORD; stdcall;
+ViKeyCheckModule:function(Index:Word;ModuleIndex:Word;IsZero:pWord;CanDecrase:pWord):DWORD; stdcall;
+VikeySetMaxClientCount:function(Index:Word;dwCount:Word):DWORD; stdcall;
+VikeyGetMaxClientCount:function(Index:Word;pdwCount:pWord):DWORD; stdcall;
+
+        begin
+
+for i:=0 to 30 do mBuf[i]:=0;
+Handle:=LoadLibrary('ViKey.dll');
+VikeyFind:=GetProcAddress(Handle,'VikeyFind');
+VikeyGetHID:=GetProcAddress(Handle,'VikeyGetHID');
+VikeyUserLogin:=GetProcAddress(Handle,'VikeyUserLogin');
+VikeyAdminLogin:=GetProcAddress(Handle,'VikeyAdminLogin');
+VikeyLogoff:=GetProcAddress(Handle,'VikeyLogoff');
+VikeySetUserPassWordAttempt:=GetProcAddress(Handle,'VikeySetUserPassWordAttempt');
+VikeySetAdminPassWordAttempt:=GetProcAddress(Handle,'VikeySetAdminPassWordAttempt');
+VikeyGetUserPassWordAttempt:=GetProcAddress(Handle,'VikeyGetUserPassWordAttempt');
+VikeyGetAdminPassWordAttempt:=GetProcAddress(Handle,'VikeyGetAdminPassWordAttempt');
+VikeyResetPassword:=GetProcAddress(Handle,'VikeyResetPassword');
+VikeySetSoftIDString:=GetProcAddress(Handle,'VikeySetSoftIDString');
+VikeyGetSoftIDString:=GetProcAddress(Handle,'VikeyGetSoftIDString');
+ViKeyGetUpdateTag:=GetProcAddress(Handle,'ViKeyGetUpdateTag');
+ViKeySetUpdateTag:=GetProcAddress(Handle,'ViKeySetUpdateTag');
+ViKeyGetVersionFlag:=GetProcAddress(Handle,'ViKeyGetVersionFlag');
+ViKeySetVersionFlag:=GetProcAddress(Handle,'ViKeySetVersionFlag');
+VikeyReadData:=GetProcAddress(Handle,'VikeyReadData');
+VikeyWriteData:=GetProcAddress(Handle,'VikeyWriteData');
+ViKeyRandom:=GetProcAddress(Handle,'ViKeyRandom');
+VikeySeed:=GetProcAddress(Handle,'VikeySeed');
+ViKeyDecraseModule:=GetProcAddress(Handle,'ViKeyDecraseModule');
+ViKeyGetModule:=GetProcAddress(Handle,'ViKeyGetModule');
+ViKeySetModule:=GetProcAddress(Handle,'ViKeySetModule');
+ViKeyCheckModule:=GetProcAddress(Handle,'ViKeyCheckModule');
+VikeySetMaxClientCount:=GetProcAddress(Handle,'VikeySetMaxClientCount');
+VikeyGetMaxClientCount:=GetProcAddress(Handle,'VikeyGetMaxClientCount');
+
+   retcode := VikeyFind(@dwCount);
+
+  if retcode<>0 then
+  begin
+    FmtStr(str,'Cannot find a ViKey,error:%08X ',[retcode]);
+    List.Items.Add(str);
+    exit;
+  end;
+
+   wIndex:=0;
+   
+   retcode := VikeyGetHID(wIndex, @dwHID);
+   FmtStr(str,'Find a ViKey,HID:%d ',[dwHID]);
+   List.Items.Add(str);
+
+  UserPinBuf[0] := '1';
+  UserPinBuf[1] := '1';
+  UserPinBuf[2] := '1';
+  UserPinBuf[3] := '1';
+  UserPinBuf[4] := '1';
+  UserPinBuf[5] := '1';
+  UserPinBuf[6] := '1';
+  UserPinBuf[7] := '1';
+
+ retcode:= VikeyUserLogin(wIndex,@UserPinBuf[0]);
+ if retcode<>0 then
+ begin
+ FmtStr(str,'VikeyUserLogin error:%d ',[retcode]);
+ List.Items.Add(str);
+    exit;
+ end;
+   List.Items.Add('VikeyUserLogin success!');
+
+  AdminPinBuf[0] := '0';
+  AdminPinBuf[1] := '0';
+  AdminPinBuf[2] := '0';
+  AdminPinBuf[3] := '0';
+  AdminPinBuf[4] := '0';
+  AdminPinBuf[5] := '0';
+  AdminPinBuf[6] := '0';
+  AdminPinBuf[7] := '0';
+    retcode:= VikeyAdminLogin(wIndex,@AdminPinBuf[0]);
+ if retcode<>0 then
+ begin
+ FmtStr(str,'VikeyAdminLogin error:%d ',[retcode]);
+ List.Items.Add(str);
+    exit;
+ end;
+   List.Items.Add('VikeyAdminLogin success!');
+
+   //write vikey memory
+  for i:=0 to 10 do
+  mBuf[i]:=i;		        //buffer
+  Addr:=0;			//[in] start address in Dongle Memory
+  Length:=10;			//[in] number of byte to write
+   retcode:= VikeyWriteData(wIndex,Addr,Length,@mBuf[0]);
+   if retcode<>0 then
+   begin
+        FmtStr(str,'VikeyWriteData error %d',[retcode]);
+        List.Items.Add(str);
+
+   end;
+   FmtStr(str,'VikeyWriteData success',[i+1]);
+   List.Items.Add('write ViKey succeed');
+
+//read dongle memory
+  for i:=0 to 10 do
+      tmpBuf[i]:=0;
+ Addr:=0;			//[in] start address in Dongle Memory
+  Length:=10;			//[in] number of byte to write
+   retcode:= VikeyReadData(wIndex,Addr,Length,@tmpBuf[0]);
+   if retcode<>0 then
+   begin
+        FmtStr(str,'reading ViKey ,find error %d',[retcode]);
+        List.Items.Add(str);
+
+   end
+   else
+   begin
+      for i:=0 to 10 do
+          if mBuf[i] <> tmpBuf[i] then
+              break;
+      if i = 10 then
+         List.Items.Add('read ViKey succeed')
+      else
+          List.Items.Add('read ViKey succeed,but content is different with writing');
+   end;
+
+     // random generation function
+	mp1:=0;	//[out] random value
+	mp2:=0;	//[out] random value
+	mp3:=0;	//[out] random value
+	mp4:=0;	//[out] random value
+   retcode:= ViKeyRandom(wIndex,@mP1,@mP2,@mP3,@mP4);
+   if retcode<>0 then
+   begin
+        FmtStr(str,'testing random, find error %d',[retcode]);
+        List.Items.Add(str);
+
+   end;                                                                     //,[mP2],[mP3],[mP4]
+   FmtStr(str,'ViKey random success! random : %d:, %d:, %d:, %d:',[mP1 ,mP2,mP3,mP4]);
+   List.Items.Add(str);
+
+    //write SoftID
+  for i:=0 to 10 do
+      SoftIDStringBuf[i]:='0';
+   SoftIDStringBuf[8]:=Char(0);
+   retcode:= VikeySetSoftIDString(wIndex,@SoftIDStringBuf[0]);
+   if retcode<>0 then
+   begin
+        FmtStr(str,'writing SoftID , find error %d',[retcode]);
+        List.Items.Add(str);
+
+   end;
+   FmtStr(str,'write SoftID success  %s',[SoftIDStringBuf]);
+   List.Items.Add(str);
+
+// read SoftID
+   retcode:= VikeyGetSoftIDString(wIndex,@SoftIDStringBuf[0]);
+   if retcode<>0 then
+   begin
+        FmtStr(str,'reading SoftID ,find error %d',[retcode]);
+        List.Items.Add(str);
+   end;
+   FmtStr(str,'read SoftID success %s',[SoftIDStringBuf]);
+   List.Items.Add(str);
+
+   // set license module
+  ModuleIndex := 2;
+  Value := 1234      ;
+  Mode :=1;               //allow module decrease
+
+   retcode:= ViKeySetModule(wIndex,ModuleIndex,Value,Mode);
+   if retcode<>0 then
+   begin
+        FmtStr(str,'Setting module %d, find error %d',[mP1,retcode]);
+        List.Items.Add(str);
+   end;
+   FmtStr(str,'set module %d as %d, decrease-able',[ModuleIndex,Value]);
+   List.Items.Add(str);
+
+   
+// check license module
+ 	ModuleIndex:=2;         //[in] module number
+
+        IsZero:=0;
+        CanDecrase:=0;
+
+   retcode:= ViKeyCheckModule(wIndex,ModuleIndex,@IsZero,@CanDecrase);
+   if retcode<>0 then
+   begin
+        FmtStr(str,'ViKeyCheckModule error %d',[retcode]);
+        List.Items.Add(str);
+   end;
+
+       FmtStr(str,'test IsZero:%d',[IsZero]);
+       List.Items.Add(str);
+       FmtStr(str,'test CanDecrase:%d',[IsZero]);
+       List.Items.Add(str);
+
+
+      // Get license module
+  ModuleIndex:=2;			//[in] moudle number
+  Value:=0;	//[out] value of storage
+   retcode:= ViKeyGetModule(wIndex,ModuleIndex,@Value);
+   if retcode<>0 then
+   begin
+        FmtStr(str,'Get module %d, find error %d',[mP1,retcode]);
+        List.Items.Add(str);
+   end;
+   FmtStr(str,'Get module %d as %d',[ModuleIndex,Value]);
+   List.Items.Add(str);
+
+   // Decrease License Module
+  ModuleIndex:=2;			//[in] moudle number
+   retcode:= ViKeyDecraseModule(wIndex,ModuleIndex);
+   if retcode<>0 then
+   begin
+        FmtStr(str,'ViKeyDecraseModule error %d',[retcode]);
+        List.Items.Add(str);
+   end;
+   FmtStr(str,'set decrease module %d ',[ModuleIndex]);
+   List.Items.Add(str);
+
+   retcode:= VikeyLogoff(wIndex);
+   List.Items.Add('ViKey logoff');
+   FreeLibrary(Handle);
+   exit;
+end;
+end.

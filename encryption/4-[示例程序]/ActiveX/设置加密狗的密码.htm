@@ -1,0 +1,225 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>ViKey--设置自动打开网址</title>
+<link href="ViKeyTest.css" rel="stylesheet" type="text/css">
+<embed id="ViKeyInterface"  type="application/npViKeyInterface-plugin" style="height: 0;width: 0; "> </embed>
+<script language="JavaScript">
+<!-- 
+var ViKeyInterface;
+
+function LoadViKeyInterface() 
+{
+	var ViKeyCount;
+	try
+	{
+		 //创建ViKey加密狗控件
+		if (document.implementation && document.implementation.createDocument && typeof XSLTProcessor != 'undefined') 
+		{ 
+			// chrome, firefox etc
+			//alert("Google");
+			ViKeyInterface= document.getElementById('ViKeyInterface');
+		}
+		else
+		{
+			//alert("IE");
+			ViKeyInterface=new ActiveXObject("ViKeyActiveX.ViKeyInterface.1");
+		}
+
+		var ViKeyCount;
+		ViKeyCount = ViKeyInterface.IVikeyFind();
+	 }
+			
+	 catch(e)  
+	 {  
+		alert("没有安装ViKey加密狗网页控件, 请安装ViKey加密狗网页控件");
+		return false;
+	 }  
+
+	return true;
+}
+
+window.onload = function() 
+{
+	LoadViKeyInterface();
+}
+
+function GetVersion()    //查找加密锁
+{   
+	var FM = window.document.ViKeyForm;
+	var Version;
+
+	Version = ViKeyInterface.IGetVersion();
+	if(ViKeyInterface.IViKeyGetError() ==0)	
+	{
+		FM.edtResult.value="版本：" + Version;
+	}
+	else
+	{
+		FM.edtResult.value="失败 ERRORCODE："+ ViKeyInterface.IViKeyGetError();
+	}
+}
+
+function ViKeyFind()    //查找加密锁
+{   
+	var FM = window.document.ViKeyForm;
+	var ViKeyCount;
+
+	ViKeyCount = ViKeyInterface.IVikeyFind();
+	if(ViKeyInterface.IViKeyGetError() ==0)	
+	{
+		FM.edtResult.value="已找到ViKey加密锁数量：" + ViKeyCount;
+
+	}
+	else
+	{
+		FM.edtResult.value="查找失败 ERRORCODE："+ ViKeyInterface.IViKeyGetError();
+	}
+}
+
+function ViKeyHID()   //获取硬件序列号
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex;
+	var ViKeyHID;
+
+	ViKeyIndex = 0;
+	ViKeyHID = ViKeyInterface.IVikeyGetHID(ViKeyIndex);
+	
+	if(ViKeyInterface.IViKeyGetError() == 0)	
+	{
+		//FM.edtResult.value="获取硬件序列号成功,硬件 " + ViKeyHID;	
+		FM.edtResult.value = ViKeyHID;
+	}
+	else
+	{
+		FM.edtResult.value="获取硬件序列号失败 ERRORCODE：" + ViKeyInterface.IViKeyGetError()	
+	}
+}
+
+function ViKeyAdminLogon()   //以用户权限登录
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex;
+	ViKeyIndex = 0;
+
+	ViKeyInterface.IVikeyAdminLogin(ViKeyIndex, FM.AdminPin.value);
+	
+	if(ViKeyInterface.IViKeyGetError() ==0)	
+	{
+		FM.edtResult.value="管理员登录成功";	
+		alert("管理员登录成功!");
+	}
+	else
+	{
+		alert("管理员登录失败 ERRORCODE：" + ViKeyInterface.IViKeyGetError());
+		FM.edtResult.value="管理员登录失败 ERRORCODE：" + ViKeyInterface.IViKeyGetError();	
+	}
+}
+
+
+function SetNewPassword()   //设置插入加密狗后自动打开的网址
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex;
+	var Mode= 0;
+	var Length = 32;
+
+	ViKeyIndex = 0;
+
+	ViKeyInterface.IVikeyResetPassword(ViKeyIndex, FM.EditNewUserPW.value, FM.EditNewAdminPW.value);
+
+	if(ViKeyInterface.IViKeyGetError() ==0)	
+	{
+		alert("设置新密码成功!");
+	}
+	else
+	{
+		alert("设置新密码失败，请确保管理员已经登录成功!");
+	}
+}
+
+</script>
+</head>
+<body>
+<div align="center">
+              <span class="blue01">ViKey--设置加密狗的用户和管理员密码</span>
+</div>
+<div align="center">
+              <span class="blue01">设置“用户和管理员密码”前，请先“查  找”->“管理员登录”</span>
+</div>
+            <form action="" name="ViKeyForm" id="ViKeyForm">
+              <table width="510" border="1" align="center" bgcolor="#dfe7df">
+     <tr>
+      <td width="123">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td><input name="btnGetVersion" type="button" class="ctbottom" id="btnGetVersion" value=" 控件版本" onClick="GetVersion();"></td>
+    </tr>
+     <tr>
+      <td width="123">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td><input name="btnFind" type="button" class="ctbottom" id="btnFind" value=" 查  找 " onClick="ViKeyFind();"></td>
+    </tr>
+    <tr>
+      <td><div align="right"><span class="ctbody3">硬件序列号：</span></div></td>
+      <td><input name="etdNTID" type="text" class="cttextboxt" id="etdNTID" size="35" maxlength="32"></td>
+      <td><input name="btnNTID" type="button" class="ctbottom" id="btnNTID" value="获取HID" onClick="ViKeyHID();"></td>
+    </tr>
+    <tr>
+      <td><div align="right" class="ctbody3">管理员密码：</div></td>
+      <td><input name="UserPin2" type="text" class="cttextboxt" id="AdminPin" value="00000000" size="35" maxlength="32"></td>
+      <td><input name="btnUserPin2" type="button" class="ctbottom" id="btnPin2" value="管理员登录" onClick="ViKeyAdminLogon();"></td>
+    </tr>
+	
+	 <tr>
+      <td><div align="right" class="ctbody3">新用户密码：</div></td>
+      <td><input name="EditNewUserPW" type="text" class="cttextboxt" id="EditNewUserPW" value="11111111" size="35" maxlength="64"></td>
+      <td></td>
+    </tr>
+	 <tr>
+      <td><div align="right" class="ctbody3">新管理员密码：</div></td>
+      <td><input name="EditNewAdminPW" type="text" class="cttextboxt" id="EditNewAdminPW" value="00000000" size="35" maxlength="64"></td>
+      <td></td>
+    </tr>
+
+	
+	 <tr>
+      <td></td>
+      <td align="center"><input name="btnSetNewPW" type="button" align="center" value="设置新密码" onClick="SetNewPassword();"></td>
+	  <td></td>
+    </tr>
+	
+    <tr>
+      <td height="18">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><div align="right" class="ctbody3">操作结果：</div></td>
+      <td><input name="edtResult" type="text" id="edtResult" size="35"></td>
+      <td>&nbsp;</td>
+    </tr>
+	    <tr>
+      <td height="18"><div align="right"><span class="ctbody3">操作说明：</span></div></td>
+      <td colspan="2" class="ctbody3"><p>1.ViKey-API测试，必须安装ViKey网页控件才可使用<br>
+        2.例子只是对锁进行基本信息设置与演示</p>        </td>
+      </tr>
+
+  </table>
+</form>
+            <table width="510" border="0" align="center" cellspacing="0">
+              <tr>
+                <td width="139"><div align="center"><span class="ctbody3"><span class="blue01 style1"><a href="ViKey网页控件.exe">点击安装ViKey加密狗网页控件</a></span></span></div></td>
+               
+              </tr>
+            </table>
+            <p align="center" class="ctbody3">Create by ViKeyMaster, 2013-5-17</p>
+<div align="center" class="ctbody3"></div>
+
+</body>
+</html>

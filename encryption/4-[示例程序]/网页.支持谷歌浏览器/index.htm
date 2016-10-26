@@ -1,0 +1,535 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>ViKey--API测试</title>
+<link href="ViKeyTest.css" rel="stylesheet" type="text/css">
+<script src="ViKeyInterface.js"></script>
+<script language="JavaScript">
+<!-- 
+var ViKeyInterface;
+
+window.onload = function() 
+{
+	var strSocketResult;
+	ViKeyInterface=new ViKeySocketInterface(); //创建UK类
+	
+	setTimeout( function(){ViKeyInterface.Initialize();}, 500);
+	
+	ViKeyInterface.ViKeySocket.onmessage = function(msg)
+	{
+		var FM = window.document.ViKeyForm;
+		var ReceiveJsonData = JSON.parse(msg.data);
+		
+		if(ReceiveJsonData.FunctionType == "VikeyFind")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				FM.edtResult.value="已找到ViKey加密锁数量：" + ReceiveJsonData.Count;
+			}
+			else
+			{
+				FM.edtResult.value="查找失败 ERRORCODE："+ ReceiveJsonData.ErrorCode;
+			}
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyGetHID")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				FM.edtResult.value="获取硬件序列号成功,硬件 " + ReceiveJsonData.HID;	
+				FM.etdNTID.value = ReceiveJsonData.HID;
+			}
+			else
+			{
+				FM.edtResult.value="获取硬件序列号失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyGetType")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				//FM.edtResult.value="获取加密狗型号成功, " + ReceiveJsonData.ViKeyType;	
+			}
+			else
+			{
+				//FM.edtResult.value="获取加密狗型号失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyGetLevel")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				//FM.edtResult.value="获取加密狗当前权限成功, " + ReceiveJsonData.ViKeyLevel;				
+			}
+			else
+			{
+				//FM.edtResult.value="获取加密狗当前权限失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyGetPtroductName")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				//FM.edtResult.value="获取加密狗设备名称成功, " + ReceiveJsonData.PtroductName;				
+			}
+			else
+			{
+				//FM.edtResult.value="获取加密狗设备名称失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyUserLogin")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				FM.edtResult.value="用户登录成功";					
+			}
+			else
+			{
+				FM.edtResult.value="用户权限登陆失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyAdminLogin")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				FM.edtResult.value="管理员权限登陆成功";
+			}
+			else
+			{
+				FM.edtResult.value="管理员权限登陆失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeySetSoftIDString")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				FM.edtResult.value="设置软件ID成功: " + FM.EditSetSoftID.value;				
+			}
+			else
+			{
+				FM.edtResult.value="设置软件ID失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyGetSoftIDString")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				FM.EditGetSoftID.value = ReceiveJsonData.SoftIDString;	
+				FM.edtResult.value="读取软件ID成功: " + FM.EditGetSoftID.value;				
+			}
+			else
+			{
+				FM.edtResult.value="获取软件ID失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyReadData")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				FM.EditReadData.value = ReceiveJsonData.Data;
+				FM.edtResult.value="读取数据成功: " +  FM.EditReadData.value;
+			}
+			else
+			{
+				FM.edtResult.value="从加密狗中读取数据失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyWriteData")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				FM.edtResult.value="写入数据成功: " + 	FM.EditWriteData.value;
+			}
+			else
+			{
+				FM.edtResult.value="向加密狗中写入数据失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "Vikey3DesSetKey")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				//FM.edtResult.value="设置3DES加解密算法密钥成功" ;	
+			}
+			else
+			{
+				//FM.edtResult.value="设置3DES加解密算法密钥失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "Vikey3DesEncrypt")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				FM.edtResult.value="3DES加密生成密文："+ReceiveJsonData.Result;		
+			}
+			else
+			{
+				FM.edtResult.value="3DES加密失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "Vikey3DesDecrypt")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				FM.edtResult.value="3DES解密生成密文："+ReceiveJsonData.Result;		
+			}
+			else
+			{
+				FM.edtResult.value="3DES解密失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyDesSetKey")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				//FM.edtResult.value="设置DES加解密算法密钥成功" ;	
+			}
+			else
+			{
+				//FM.edtResult.value="设置DES加解密算法密钥失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyDesEncrypt")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				//FM.edtResult.value="DES加密成功"  + ReceiveJsonData.Result;	
+			}
+			else
+			{
+				//FM.edtResult.value="DES加密失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyDesDecrypt")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				//FM.edtResult.value="DES解密成功"  + ReceiveJsonData.Result;	
+			}
+			else
+			{
+				//FM.edtResult.value="3DES解密失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeySetAutoRunUrl")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				//FM.edtResult.value="设置自动打开网址成功";	
+			}
+			else
+			{
+				//FM.edtResult.value="设置自动打开网址失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyMD5")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				//FM.edtResult.value="计算MD5哈希数据成功"  + ReceiveJsonData.Result;	
+			}
+			else
+			{
+				//FM.edtResult.value="计算MD5哈希数据失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeySetMD5Key")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				FM.edtResult.value="设置HMAC_MD5算法Key成功";	
+			}
+			else
+			{
+				FM.edtResult.value="设置HMAC_MD5算法Key失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyHmacMD5")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				FM.edtResult.value="HMAC-MD5计算成功:"+ReceiveJsonData.Result;
+				FM.edtMD5Result.value = ReceiveJsonData.Result;
+			}
+			else
+			{
+				FM.edtResult.value="计算HMAC_MD5哈希数据失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeySHA1")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				//FM.edtResult.value="计算SHA1哈希数据成功"  + ReceiveJsonData.Result;	
+			}
+			else
+			{
+				//FM.edtResult.value="计算SHA1哈希数据失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeySetSHA1Key")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				//FM.edtResult.value="设置HMAC_SHA1算法Key成功";	
+			}
+			else
+			{
+				//FM.edtResult.value="设置HMAC_SHA1算法Key失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyHmacSHA1")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				//FM.edtResult.value="设置HMAC_SHA1哈希数据成功"  + ReceiveJsonData.Result;	
+			}
+			else
+			{
+				//FM.edtResult.value="设置HMAC_SHA1哈希数据失败 ERRORCODE：" + ReceiveJsonData.ErrorCode;	
+			}			
+		}
+				
+			
+	};
+}
+
+function GetVersion()    //查找加密锁
+{   
+	var FM = window.document.ViKeyForm;
+	var Version;
+
+	Version = ViKeyInterface.IGetVersion();
+	if(ViKeyInterface.IViKeyGetError() ==0)	
+	{
+		FM.edtResult.value="版本：" + Version;
+	}
+	else
+	{
+		FM.edtResult.value="失败 ERRORCODE："+ ViKeyInterface.IViKeyGetError();
+	}
+}
+
+function ViKeyFind()    //查找加密锁
+{   
+	ViKeyInterface.FindViKey();
+}
+
+function ViKeyHID()   //获取硬件序列号
+{
+	var ViKeyIndex = 0;
+	ViKeyInterface.VikeyGetHID(ViKeyIndex);
+}
+
+function ViKeyUserLogon()   //以用户权限登录
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex = 0;	
+	ViKeyInterface.VikeyUserLogin(ViKeyIndex, FM.UserPin2.value);
+}
+
+function ViKeyAdminLogon()   //以管理员权限登录
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex = 0;	
+	ViKeyInterface.VikeyAdminLogin(ViKeyIndex, FM.AdminPin2.value);
+}
+
+function ViKeySetSoftID()   //设置软件ID
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex = 0;	
+	ViKeyInterface.VikeySetSoftIDString(ViKeyIndex, FM.EditSetSoftID.value);
+}
+
+function ViKeyGetSoftID()   //获取软件ID
+{
+	var ViKeyIndex = 0;	
+	ViKeyInterface.VikeyGetSoftIDString(ViKeyIndex);
+}
+
+function ViKeyWriteData()   //写数据到ViKey
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex = 0;	
+	var Addr = 0;
+	var Length = 32;
+	ViKeyInterface.VikeyWriteData(ViKeyIndex, Addr, Length, FM.EditWriteData.value);
+}
+
+function ViKeyReadData()   //从ViKey中读取数据
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex = 0;	
+	var Addr = 0;
+	var Length = 32;
+	
+	ViKeyInterface.VikeyReadData(ViKeyIndex, Addr, Length);
+}
+
+function ViKeySetMd5Key() //设置MD5的Key
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex = 0;	
+	
+	ViKeyInterface.VikeySetMD5Key(ViKeyIndex, FM.EditMD5Key.value);	
+}
+
+function VikeyHmacMD5()   //计算MD5值
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex = 0;	
+	var Length = 32;
+	
+	ViKeyInterface.VikeyHmacMD5(ViKeyIndex, Length, FM.edtMD5Text.value);
+
+	if(ViKeyInterface.IViKeyGetError() ==0)	
+	{
+		FM.edtResult.value="HMAC-MD5计算成功";
+		FM.edtMD5Result.value=buffer;
+	}
+	else
+	{
+		FM.edtResult.value="HMAC-计算失败 ERRORCODE："+ ViKeyInterface.IViKeyGetError();	
+	}
+}
+function Des3Encrypt()   //3Des加密
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex = 0;
+	
+	if(FM.edtDesEncrypt.value.length != 24)
+	{	
+		alert("加密长度必须为24个字符");
+	}
+	else
+	{
+		ViKeyInterface.Vikey3DesEncrypt(ViKeyIndex, 24, FM.edtDesEncrypt.value);
+	}
+}
+
+function Des3Decrypt()   //3Des解密
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex = 0;
+	if( FM.edtDesDecrypt.value.length != 48)
+	{	
+		alert("解密长度必须为48个16进制字符");
+	}
+	else
+	{
+		ViKeyInterface.Vikey3DesDecrypt(ViKeyIndex, 48, FM.edtDesDecrypt.value);
+	}
+}
+
+</script>
+</head>
+<body>
+<div align="center">
+              <span class="blue01">ViKey API测试</span>
+
+</div>
+     <form action="" name="ViKeyForm" id="ViKeyForm">
+     <table width="850" border="1" align="center" bgcolor="#dfe7df">
+     <tr>
+      <td width="123">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td><input name="btnGetVersion" type="button" class="ctbottom" id="btnGetVersion" value=" 控件版本" onClick="GetVersion();"></td>
+    </tr>
+     <tr>
+      <td width="123">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td><input name="btnFind" type="button" class="ctbottom" id="btnFind" value=" 查  找 " onClick="ViKeyFind();"></td>
+    </tr>
+    <tr>
+      <td><div align="right"><span class="ctbody3">硬件序列号：</span></div></td>
+      <td><input name="etdNTID" type="text" class="cttextboxt" id="etdNTID" size="90" maxlength="32"></td>
+      <td><input name="btnNTID" type="button" class="ctbottom" id="btnNTID" value="获取HID" onClick="ViKeyHID();"></td>
+    </tr>
+    <tr>
+      <td><div align="right" class="ctbody3">用户密码：</div></td>
+      <td><input name="UserPin2" type="text" class="cttextboxt" id="UserPin2" value="11111111" size="90" maxlength="32"></td>
+      <td><input name="btnUserPin2" type="button" class="ctbottom" id="btnUserPin2" value="用户登录" onClick="ViKeyUserLogon();"></td>
+    </tr>
+    <tr>
+      <td><div align="right" class="ctbody3">管理员密码：</div></td>
+      <td><input name="AdminPin2" type="text" class="cttextboxt" id="AdminPin2" value="00000000" size="90" maxlength="32"></td>
+      <td><input name="btnAdminPin2" type="button" class="ctbottom" id="btnAdminPin2" value="管理员登录" onClick="ViKeyAdminLogon();"></td>
+    </tr>
+	 <tr>
+      <td><div align="right" class="ctbody3">设置软件ID：</div></td>
+      <td><input name="EditSetSoftID" type="text" class="cttextboxt" id="EditSetSoftID" value="12345678" size="90" maxlength="32"></td>
+      <td><input name="btnSetSID" type="button" class="ctbottom" id="btnSetSID" value="设置SID" onClick="ViKeySetSoftID();"></td>
+    </tr>
+	 <tr>
+      <td><div align="right" class="ctbody3">读取软件ID：</div></td>
+      <td><input name="EditGetSoftID" type="text" class="cttextboxt" id="EditGetSoftID" value="" size="90" maxlength="32"></td>
+      <td><input name="btnGetSID" type="button" class="ctbottom" id="btnGetSID" value="读取SID" onClick="ViKeyGetSoftID();"></td>
+    </tr>
+		 <tr>
+      <td><div align="right" class="ctbody3">写入数据：</div></td>
+      <td><input name="EditWriteData" type="text" class="cttextboxt" id="EditWriteData" value="abcdefg-ABCDEFG" size="90" maxlength="32"></td>
+      <td><input name="btnSetData" type="button" class="ctbottom" id="btnSetData" value="写入数据" onClick="ViKeyWriteData();"></td>
+    </tr>
+	 <tr>
+      <td><div align="right" class="ctbody3">读取数据：</div></td>
+      <td><input name="EditReadData" type="text" class="cttextboxt" id="EditReadData" value="" size="90" maxlength="32"></td>
+      <td><input name="btnGetData" type="button" class="ctbottom" id="btnGetData" value="读取数据" onClick="ViKeyReadData();"></td>
+    </tr>
+    <tr>
+      <td><div align="right" class="ctbody3">MD5Key：</div></td>
+      <td><input name="EditMD5Key" type="text" class="cttextboxt" id="edtMD5Key" value="1234ABCD1234abcdxxxxyyyy" size="90" maxlength="32"></td>
+      <td><input name="btnSetMD5Key" type="button" class="ctbottom" id="btnSetMD5Key" value="设置MD5Key" onClick="ViKeySetMd5Key();"></td>
+    </tr>
+    <tr>
+      <td><div align="right" class="ctbody3">输入内容</div></td>
+      <td><input name="edtMD5Text" type="text" class="cttextboxt" id="edtMD5Text" value="FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" size="90" maxlength="32"></td>
+    </tr>    
+	<tr>
+      <td><div align="right" class="ctbody3">计算MD5值</div></td>
+      <td><input name="edtMD5Result" type="text" class="cttextboxt" id="edtMD5Result" value="" size="90" maxlength="32"></td>
+      <td><input name="btnMD5Value" type="button" class="ctbottom" id="btnHmacMD5" value="计算MD5值" onClick="VikeyHmacMD5();"></td>
+    </tr> 
+	<tr>
+      <td><div align="right" class="ctbody3">3DES加密</div></td>
+      <td><input name="edtDesEncrypt" type="text" class="cttextboxt" id="edtDesEncrypt" value="" size="90" maxlength="1024"></td>
+      <td><input name="btnDesEncrypt" type="button" class="ctbottom" id="btnDesEncrypt" value="3DES加密" onClick="Des3Encrypt();"></td>
+    </tr> 
+	<tr>
+      <td><div align="right" class="ctbody3">3DES解密</div></td>
+      <td><input name="edtDesDecrypt" type="text" class="cttextboxt" id="edtDesDecrypt" value="" size="90" maxlength="1024"></td>
+      <td><input name="btnDesDecrypt" type="button" class="ctbottom" id="btnDesDecrypt" value="3DES解密" onClick="Des3Decrypt();"></td>
+    </tr>
+    <tr>
+      <td height="18">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><div align="right" class="ctbody3">操作结果：</div></td>
+      <td><input name="edtResult" type="text" id="edtResult" size="90"></td>
+      <td>&nbsp;</td>
+    </tr>
+	    <tr>
+      <td height="18"><div align="right"><span class="ctbody3">操作说明：</span></div></td>
+      <td colspan="2" class="ctbody3"><p>1.ViKey-API测试，必须安装ViKey网页控件才可使用<br>
+        2.例子只是对锁进行基本信息设置与演示</p>        </td>
+      </tr>
+
+  </table>
+</form>
+            <table width="510" border="0" align="center" cellspacing="0">
+              <tr>
+                <td width="139"><div align="center"><span class="ctbody3"><span class="blue01 style1"><a href="ViKey网页控件.exe">点击安装ViKey加密狗网页控件</a></span></span></div></td>
+               
+              </tr>
+            </table>
+            <p align="center" class="ctbody3">Create by ViKeyMaster, 2013-5-17</p>
+<div align="center" class="ctbody3"></div>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+1、ViKeyJavaObj.java必须存放在工程目录下的ViKey目录中
+
+2、当提示找不到ViKeyJavaObj.dll时，
+
+请将对应的ViKeyJavaObj.dll拷到对应的目录下，开发商可以使用如下代码将DLL要放置的路径打印出来：System.out.println(System.getProperty("java.library.path"));可能有很多个，拷到第一个就可以了
+
+3、当提示以下错误时，UnsatisfiedLinkError，
+请确认是否使用了对应的DLL，另外请确认ViKeyJavaObj.java是否在工程目录的ViKey文件夹中

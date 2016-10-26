@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document>
+	<Protection
+		InputFileName=".\ViKey.exe"
+		Options="0"
+		>
+		<Messages
+		/>
+		<Folders
+		/>
+		<Procedures
+		/>
+	</Protection>
+	<DLLBox>
+		<DLL
+			Name="ViKeyVMP.dll"
+			FileName="ViKeyVMP.dll"
+			LoadAtStart="true"
+		/>
+	</DLLBox>
+	<Script
+	/>
+</Document>

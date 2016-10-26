@@ -1,0 +1,58 @@
+
+
+如果编程后，读写加密狗失败请按照以下步骤操作
+1、使用Linux系统的Root运行试试
+2、修改Linux系统对USB设备的权限配置文件
+
+
+	for Ubuntu(7.10) (/etc/udev/rules.d/40-permissions.rules)
+	### 原始 ###
+	# USB devices (usbfs replacement)
+	SUBSYSTEM=="usb_device",		MODE="0664" 
+	### end of original ###
+	to 
+	### 修改为 ###
+	# USB devices (usbfs replacement)
+	SUBSYSTEM=="usb_device",		MODE="0666"
+	########################
+
+	///////////////////////////////////////////////////////////////////
+	for Ubuntu(8.04/8.10) (/etc/udev/rules.d/40-basic-permissions.rules)
+	### 原始 ###
+	# USB devices (usbfs replacement)
+	SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", MODE="0664"
+	SUBSYSTEM=="usb_device",		MODE="0664"
+	to 
+	### 修改为 ###
+	# USB devices (usbfs replacement)
+	SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", MODE="0666"
+	SUBSYSTEM=="usb_device",		MODE="0666"
+	########################
+
+	///////////////////////////////////////////////////////////////////
+	for Ubuntu(9.04) 、CentOS (/lib/udev/rules.d/50-udev-default.rules ) line 53
+	### 原始 ###
+	# libusb device nodes
+	SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", NAME="bus/usb/$env{BUSNUM}/$env{DEVNUM}", MODE="0664"
+	to 
+	### 修改为 ###
+	# libusb device nodes
+	SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", NAME="bus/usb/$env{BUSNUM}/$env{DEVNUM}", MODE="0666"
+	########################
+
+	
+	b. for Fedora Core (/etc/udev/rules.d/50-udev.rules)
+	### 原始 ###
+	ACTION=="add", SUBSYSTEM=="usb_device", \
+	PROGRAM="/bin/sh -c 'K=%k; K=$${K#usbdev}; printf bus/usb/%%03i/%%03i $${K%%%%.*} $${K#*.}'", \
+	NAME="%c", MODE="0660" 
+	### 修改为 ###
+	ACTION=="add", SUBSYSTEM=="usb_device", \
+	PROGRAM="/bin/sh -c 'K=%k; K=$${K#usbdev}; printf bus/usb/%%03i/%%03i $${K%%%%.*} $${K#*.}'", \
+	NAME="%c", MODE="0666" 
+	########################
+	
+
+
+
+

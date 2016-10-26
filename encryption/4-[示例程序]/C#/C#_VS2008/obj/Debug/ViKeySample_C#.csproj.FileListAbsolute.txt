@@ -1,0 +1,5 @@
+D:\ViKey\ViKeySVN\ViKey\2_Codes\ViKeySample\C#\bin\Debug\ViKeySample.exe
+D:\ViKey\ViKeySVN\ViKey\2_Codes\ViKeySample\C#\bin\Debug\ViKeySample.pdb
+D:\ViKey\ViKeySVN\ViKey\2_Codes\ViKeySample\C#\obj\Debug\ResolveAssemblyReference.cache
+D:\ViKey\ViKeySVN\ViKey\2_Codes\ViKeySample\C#\obj\Debug\ViKeySample.exe
+D:\ViKey\ViKeySVN\ViKey\2_Codes\ViKeySample\C#\obj\Debug\ViKeySample.pdb

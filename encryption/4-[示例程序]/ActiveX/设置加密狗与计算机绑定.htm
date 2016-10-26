@@ -1,0 +1,268 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>ViKey--设置自动打开网址</title>
+<link href="ViKeyTest.css" rel="stylesheet" type="text/css">
+<embed id="ViKeyInterface"  type="application/npViKeyInterface-plugin" style="height: 0;width: 0; "> </embed>
+<script language="JavaScript">
+<!-- 
+var ViKeyInterface;
+
+function LoadViKeyInterface() 
+{
+	var ViKeyCount;
+	try
+	{
+		 //创建ViKey加密狗控件
+		if (document.implementation && document.implementation.createDocument && typeof XSLTProcessor != 'undefined') 
+		{ 
+			// chrome, firefox etc
+			//alert("Google");
+			ViKeyInterface= document.getElementById('ViKeyInterface');
+		}
+		else
+		{
+			//alert("IE");
+			ViKeyInterface=new ActiveXObject("ViKeyActiveX.ViKeyInterface.1");
+		}
+
+		var ViKeyCount;
+		ViKeyCount = ViKeyInterface.IVikeyFind();
+	 }
+			
+	 catch(e)  
+	 {  
+		alert("没有安装ViKey加密狗网页控件, 请安装ViKey加密狗网页控件");
+		return false;
+	 }  
+
+	return true;
+}
+
+window.onload = function() 
+{
+	LoadViKeyInterface();
+}
+
+function GetVersion()    //查找加密锁
+{   
+	var FM = window.document.ViKeyForm;
+	var Version;
+
+	Version = ViKeyInterface.IGetVersion();
+	if(ViKeyInterface.IViKeyGetError() ==0)	
+	{
+		FM.edtResult.value="版本：" + Version;
+	}
+	else
+	{
+		FM.edtResult.value="失败 ERRORCODE："+ ViKeyInterface.IViKeyGetError();
+	}
+}
+
+function ViKeyFind()    //查找加密锁
+{   
+	var FM = window.document.ViKeyForm;
+	var ViKeyCount;
+
+	ViKeyCount = ViKeyInterface.IVikeyFind();
+	if(ViKeyInterface.IViKeyGetError() ==0)	
+	{
+		FM.edtResult.value="已找到ViKey加密锁数量：" + ViKeyCount;
+	}
+	else
+	{
+		FM.edtResult.value="查找失败 ERRORCODE："+ ViKeyInterface.IViKeyGetError();
+	}
+}
+
+function ViKeyHID()   //获取硬件序列号
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex;
+	var ViKeyHID;
+
+	ViKeyIndex = 0;
+	ViKeyHID = ViKeyInterface.IVikeyGetHID(ViKeyIndex);
+	
+	if(ViKeyInterface.IViKeyGetError() == 0)	
+	{
+		//FM.edtResult.value="获取硬件序列号成功,硬件 " + ViKeyHID;	
+		 FM.etdHID.value = ViKeyHID;
+		 FM.edtResult.value = "获取成功："  + ViKeyHID;
+	}
+	else
+	{
+		FM.edtResult.value="获取硬件序列号失败 ERRORCODE：" + ViKeyInterface.IViKeyGetError()	
+	}
+}
+
+function ViKeyAdminLogon()   //以用户权限登录
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex;
+	ViKeyIndex = 0;
+
+	ViKeyInterface.IVikeyAdminLogin(ViKeyIndex, FM.AdminPin.value);
+	
+	if(ViKeyInterface.IViKeyGetError() ==0)	
+	{
+		FM.edtResult.value="用户登录成功";	
+	}
+	else
+	{
+		FM.edtResult.value="用户登录失败 ERRORCODE：" + ViKeyInterface.IViKeyGetError();	
+	}
+}
+
+
+function GetLocalPcChkData()   //设置插入加密狗后自动打开的网址
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex;
+
+	ViKeyIndex = 0;
+	FM.EditLocalChkData.value = ViKeyInterface.IVikeyGetCurrentPcChkData(ViKeyIndex);
+	if(ViKeyInterface.IViKeyGetError() ==0)	
+	{
+		FM.edtResult.value="获取成功";
+		alert("获取成功");
+	}
+	else
+	{
+		FM.edtResult.value="设置网址失败 ERRORCODE："+ViKeyInterface.IViKeyGetError();	
+		alert("获取失败");
+	}
+}
+
+function SetPcChkData()   
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex;
+	var LocalPcChkData;
+
+	ViKeyIndex = 0;
+	if( FM.EditSetChkData.value.length != 32)
+	{	
+		alert("请出入正确的计算机特征码");
+	}
+	else
+	{
+		ViKeyInterface.IVikeySetPcChkData(ViKeyIndex, FM.EditSetChkData.value);
+		if(ViKeyInterface.IViKeyGetError() ==0)	
+		{
+			FM.edtResult.value="绑定成功";
+			alert("绑定成功");
+		}
+		else
+		{
+			FM.edtResult.value="绑定失败 ERRORCODE："+ViKeyInterface.IViKeyGetError();	
+			alert("绑定失败");
+		}
+	}
+}
+
+function OnVikeyIsThisPc()  
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex;
+	var LocalPcChkData;
+
+	ViKeyIndex = 0;
+	ViKeyInterface.IVikeyIsThisPc(ViKeyIndex);
+	if(ViKeyInterface.IViKeyGetError() ==0)	
+	{
+		FM.edtResult.value="计算机与加密狗匹配";
+		FM.EditIsChkRight.value = "匹配";
+		alert("匹配");
+	}
+	else
+	{
+		FM.edtResult.value="计算机与加密狗不匹配";
+		FM.EditIsChkRight.value = "不匹配";
+		alert("不匹配");
+	}
+}
+
+</script>
+</head>
+<body>
+<div align="center">
+              <span class="blue01">ViKey--加密狗与计算机绑定的操作演示</span>
+</div>
+<div align="center">
+              <span class="blue01">操作前，请先“查  找”->“用户登录”</span>
+</div>
+     <form action="" name="ViKeyForm" id="ViKeyForm">
+              <table width="610" border="1" align="center" bgcolor="#dfe7df">
+     <tr>
+      <td width="123">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td><input name="btnGetVersion" type="button" class="ctbottom" id="btnGetVersion" value=" 控件版本" onClick="GetVersion();"></td>
+    </tr>
+     <tr>
+      <td width="123">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td><input name="btnFind" type="button" class="ctbottom" id="btnFind" value=" 查  找 " onClick="ViKeyFind();"></td>
+    </tr>
+    <tr>
+      <td><div align="right"><span class="ctbody3">硬件序列号：</span></div></td>
+      <td><input name="etdHID" type="text" class="cttextboxt" id="etdHID" size="35" maxlength="32"></td>
+      <td><input name="btnHID" type="button" class="ctbottom" id="btnHID" value="获取HID" onClick="ViKeyHID();"></td>
+    </tr>
+    <tr>
+      <td><div align="right" class="ctbody3">管理员密码：</div></td>
+      <td><input name="UserPin2" type="text" class="cttextboxt" id="AdminPin" value="00000000" size="35" maxlength="32"></td>
+      <td><input name="btnUserPin2" type="button" class="ctbottom" id="btnPin2" value="管理员登录" onClick="ViKeyAdminLogon();"></td>
+    </tr>
+	
+	 <tr>
+      <td><div align="right" class="ctbody3">获取本地计算机特征码：</div></td>
+      <td><input name="EditLocalChkData" type="text" class="cttextboxt" id="EditLocalChkData" value="" size="35" maxlength="64"></td>
+      <td><input name="btnLocalPcChkData" type="button" class="ctbottom"  value="获取" onClick="GetLocalPcChkData();"></td>
+    </tr>
+	 <tr>
+      <td><div align="right" class="ctbody3">绑定计算机特征码到加密狗：</div></td>
+      <td><input name="EditSetChkData" type="text" class="cttextboxt" id="EditSetChkData" value="" size="35" maxlength="64"></td>
+      <td><input name="btnSetlPcChkData" type="button" class="ctbottom"  value="绑定" onClick="SetPcChkData();"></td>
+    </tr>
+	
+	 <tr>
+      <td><div align="right" class="ctbody3">计算机与加密狗是否匹配：</div></td>
+      <td><input name="EditIsChkRight" type="text" class="cttextboxt" id="EditIsChkRight" value="" size="35" maxlength="64"></td>
+      <td><input name="btnOnVikeyIsThisPc" type="button" class="ctbottom"  value="检查" onClick="OnVikeyIsThisPc();"></td>
+    </tr>
+    <tr>
+      <td height="18">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><div align="right" class="ctbody3">操作结果：</div></td>
+      <td><input name="edtResult" type="text" id="edtResult" size="35"></td>
+      <td>&nbsp;</td>
+    </tr>
+	    <tr>
+      <td height="18"><div align="right"><span class="ctbody3">操作说明：</span></div></td>
+      <td colspan="2" class="ctbody3"><p>1.ViKey-API测试，必须安装ViKey网页控件才可使用<br>
+        2.例子只是对锁进行基本信息设置与演示</p>        </td>
+      </tr>
+
+  </table>
+</form>
+            <table width="510" border="0" align="center" cellspacing="0">
+              <tr>
+                <td width="139"><div align="center"><span class="ctbody3"><span class="blue01 style1"><a href="ViKey网页控件.exe">点击安装ViKey加密狗网页控件</a></span></span></div></td>
+               
+              </tr>
+            </table>
+            <p align="center" class="ctbody3">Create by ViKeyMaster, 2013-5-17</p>
+<div align="center" class="ctbody3"></div>
+
+</body>
+</html>

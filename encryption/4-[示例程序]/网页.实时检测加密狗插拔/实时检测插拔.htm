@@ -1,0 +1,111 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>实时检测加密狗插拔</title>
+<link href="ViKeyTest.css" rel="stylesheet" type="text/css">
+<embed id="ViKeyInterface"  type="application/npViKeyInterface-plugin" style="height: 0;width: 0; "> </embed>
+<script language="JavaScript">
+<!-- 
+var ViKeyInterface;
+
+//循环调用
+function CheckHasVikey() 
+{
+	var ViKeyCount;
+	var ViKeyIndex;
+	var ViKeyHID;
+	var FM = window.document.ViKeyForm;
+
+	ViKeyIndex = 0;
+	
+	ViKeyCount = ViKeyInterface.IVikeyFind();
+	if(ViKeyInterface.IViKeyGetError() ==0)	
+	{
+		if(ViKeyCount == 1)
+		{
+			ViKeyHID = ViKeyInterface.IVikeyGetHID(ViKeyIndex);
+			FM.edtResult.value = "系统中插入加密狗。硬件ID为:" + ViKeyHID;
+		}
+		else
+		{	
+			FM.edtResult.value = "系统中检测到"+ViKeyCount+"个加密狗。";
+		}
+		
+	}
+	else
+	{
+		FM.edtResult.value = "系统中没有加密狗";
+	}
+	setTimeout("CheckHasVikey();", 1000)
+}
+
+function LoadViKeyInterface() 
+{
+	var ViKeyCount;
+	try
+	{
+		 //创建ViKey加密狗控件
+		if (document.implementation && document.implementation.createDocument && typeof XSLTProcessor != 'undefined') 
+		{ 
+			// chrome, firefox etc
+			//alert("Google");
+			ViKeyInterface= document.getElementById('ViKeyInterface');
+		}
+		else
+		{
+			//alert("IE");
+			ViKeyInterface=new ActiveXObject("ViKeyActiveX.ViKeyInterface.1");
+		}
+
+		var ViKeyCount;
+		ViKeyCount = ViKeyInterface.IVikeyFind();
+	 }
+			
+	 catch(e)  
+	 {  
+		alert("没有安装ViKey加密狗网页控件, 请安装ViKey加密狗网页控件");
+		return false;
+	 }  
+
+	return true;
+}
+
+window.onload = function() 
+{
+	LoadViKeyInterface();
+	CheckHasVikey() 
+}
+
+</script>
+</head>
+<body>
+<div align="center">
+              <span class="blue01">ViKey加密狗实时检测插拔演示</span>
+
+</div>
+            <form action="" name="ViKeyForm" id="ViKeyForm">
+              <table width="510" border="1" align="center" bgcolor="#dfe7df">
+    
+    <tr>
+      <td><div align="right" class="ctbody3">加密狗状态：</div></td>
+      <td><input name="edtResult" type="text" id="edtResult" size="60" ></td>
+    </tr>
+	    <tr>
+      <td height="18"><div align="right"><span class="ctbody3">操作说明：</span></div></td>
+      <td colspan="2" class="ctbody3"><p>1.ViKey-API测试，必须安装ViKey网页控件才可使用<br>
+        2.例子是对实时检测插拔演示</p>        </td>
+      </tr>
+
+  </table>
+</form>
+            <table width="510" border="0" align="center" cellspacing="0">
+              <tr>
+                <td width="139"><div align="center"><span class="ctbody3"><span class="blue01 style1"><a href="ViKey网页控件.exe">点击安装ViKey加密狗网页控件</a></span></span></div></td>
+               
+              </tr>
+            </table>
+            <p align="center" class="ctbody3">Create by ViKeyMaster, 2013-5-17</p>
+<div align="center" class="ctbody3"></div>
+
+</body>
+</html>
